@@ -19,9 +19,10 @@ LRESULT CALLBACK WndProc(
 
 PSTRINGVECTOR ReadFileInMemory(LPSTR lpFileName);
 void ReleaseAll(void);
+
 // Global handles
-LPSTR glpCmdLine = NULL;
-PSTRINGVECTOR gpStrVec = NULL;
+LPSTR           glpCmdLine      = NULL;
+PSTRINGVECTOR   gpStrVec        = NULL;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
@@ -91,18 +92,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
                 return(EXIT_FAILURE);
         }
 
-        wndEx.cbSize		= sizeof(WNDCLASSEX);
-        wndEx.cbClsExtra	= 0;
-        wndEx.cbWndExtra	= 0;
-        wndEx.hIcon			= hIcon;
-        wndEx.hIconSm		= hIconSm;
-        wndEx.hInstance		= hInstance;
-        wndEx.hbrBackground	= hBrush;
-        wndEx.hCursor		= hCursor;
-        wndEx.lpszClassName	= szClassName;
-        wndEx.lpszMenuName	= NULL;
-        wndEx.lpfnWndProc	= WndProc;
-        wndEx.style			= CS_HREDRAW | CS_VREDRAW;
+        wndEx.cbSize            = sizeof(WNDCLASSEX);
+        wndEx.cbClsExtra        = 0;
+        wndEx.cbWndExtra        = 0;
+        wndEx.hIcon             = hIcon;
+        wndEx.hIconSm           = hIconSm;
+        wndEx.hInstance	        = hInstance;
+        wndEx.hbrBackground     = hBrush;
+        wndEx.hCursor           = hCursor;
+        wndEx.lpszClassName     = szClassName;
+        wndEx.lpszMenuName      = NULL;
+        wndEx.lpfnWndProc       = WndProc;
+        wndEx.style             = CS_HREDRAW | CS_VREDRAW;
 
         if(!RegisterClassEx(&wndEx))
         {
@@ -159,7 +160,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
         static int  cxChar, cyChar, cxCaps;
         static int  cxClient, cyClient, iVscollPos = 0;
-	int         iVerPos, iPaintBeg, iPaintEnd;
+        int         iVerPos, iPaintBeg, iPaintEnd;
         HDC         hdc = NULL;
         FILE*       fp = NULL;
         int         iCnt=0;

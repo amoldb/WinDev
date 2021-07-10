@@ -6,9 +6,9 @@
 #pragma comment (lib, "kernel32.lib")
 #pragma comment (lib, "gdi32.lib")
 
-#define 	bSize		256
-#define		xOffSet		4
-#define		xStart		0
+#define  bSize   4096
+#define  xOffSet 4
+#define  xStart  0
 
 LRESULT CALLBACK WndProc(
                         HWND hWnd,
@@ -21,28 +21,28 @@ PSTRINGVECTOR ReadFileInMemory(LPSTR lpFileName);
 void ReleaseAll(void);
 
 // Global handles
-LPSTR           glpCmdLine      = NULL;
-PSTRINGVECTOR   gpStrVec        = NULL;
+LPSTR           glpCmdLine = NULL;
+PSTRINGVECTOR   gpStrVec   = NULL;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
-	static TCHAR szClassName[]      = TEXT("File reader.");
-	static TCHAR szWindowCaption[]  = TEXT("First file reader.");
-	
-        WNDCLASSEX	wndEx;
-        MSG		msg;
+	static TCHAR szClassName[]     = TEXT("File reader.");
+	static TCHAR szWindowCaption[] = TEXT("First file reader.");
+
+        WNDCLASSEX wndEx;
+        MSG        msg;
 
         glpCmdLine = lpCmdLine;
 
-        ZeroMemory(&wndEx, sizeof(WNDCLASSEX));	
+        ZeroMemory(&wndEx, sizeof(WNDCLASSEX));
         ZeroMemory(&msg, sizeof(&msg));
 
-        HICON		hIcon	= NULL;
-        HICON		hIconSm	= NULL;
-        HCURSOR		hCursor	= NULL;
-        HBRUSH		hBrush	= NULL;
-        HWND 		hWnd	= NULL;
-        ATOM 		bIsWindowClassRegistered = 0;
+        HICON   hIcon                    = NULL;
+        HICON   hIconSm                  = NULL;
+        HCURSOR hCursor                  = NULL;
+        HBRUSH  hBrush                   = NULL;
+        HWND    hWnd                     = NULL;
+        ATOM    bIsWindowClassRegistered = 0;
 
         hBrush = (HBRUSH)GetStockObject(GRAY_BRUSH);
         if(hBrush == NULL)
@@ -54,7 +54,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
                         MB_ICONERROR
                 );
                 return(EXIT_FAILURE);
-        }	
+        }
 
         hCursor = LoadCursor((HINSTANCE)NULL, IDC_ARROW);
         if(hCursor == NULL)
@@ -92,18 +92,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
                 return(EXIT_FAILURE);
         }
 
-        wndEx.cbSize            = sizeof(WNDCLASSEX);
-        wndEx.cbClsExtra        = 0;
-        wndEx.cbWndExtra        = 0;
-        wndEx.hIcon             = hIcon;
-        wndEx.hIconSm           = hIconSm;
-        wndEx.hInstance	        = hInstance;
-        wndEx.hbrBackground     = hBrush;
-        wndEx.hCursor           = hCursor;
-        wndEx.lpszClassName     = szClassName;
-        wndEx.lpszMenuName      = NULL;
-        wndEx.lpfnWndProc       = WndProc;
-        wndEx.style             = CS_HREDRAW | CS_VREDRAW;
+        wndEx.cbSize        = sizeof(WNDCLASSEX);
+        wndEx.cbClsExtra    = 0;
+        wndEx.cbWndExtra    = 0;
+        wndEx.hIcon         = hIcon;
+        wndEx.hIconSm       = hIconSm;
+        wndEx.hInstance     = hInstance;
+        wndEx.hbrBackground = hBrush;
+        wndEx.hCursor       = hCursor;
+        wndEx.lpszClassName = szClassName;
+        wndEx.lpszMenuName  = NULL;
+        wndEx.lpfnWndProc   = WndProc;
+        wndEx.style         = CS_HREDRAW | CS_VREDRAW;
 
         if(!RegisterClassEx(&wndEx))
         {
@@ -120,7 +120,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
                         WS_EX_APPWINDOW,
                         szClassName,
                         szWindowCaption,
-                        WS_OVERLAPPED | WS_CAPTION | WS_MINIMIZEBOX | 
+                        WS_OVERLAPPED | WS_CAPTION | WS_MINIMIZEBOX |
                         WS_MAXIMIZEBOX | WS_SYSMENU | WS_THICKFRAME | WS_VSCROLL,
                         CW_USEDEFAULT,
                         CW_USEDEFAULT,
@@ -203,7 +203,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                 case WM_VSCROLL:
                         si.cbSize   = sizeof(SCROLLINFO);
                         si.fMask    = SIF_ALL;
-                        GetScrollInfo (hWnd, SB_VERT, &si);
+                        GetScrollInfo(hWnd, SB_VERT, &si);
                         iVerPos     = si.nPos;
                         switch(LOWORD(wParam))
                         {
@@ -262,24 +262,25 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                         iPaintEnd = min(gpStrVec->iVectorSize,
                         iVerPos + ps.rcPaint.bottom / cyChar);
 
-			SetBkMode(hdc, TRANSPARENT);
-			for(iCnt=iPaintBeg; iCnt<gpStrVec->iVectorSize; ++iCnt)
-			{
+                        SetBkMode(hdc, TRANSPARENT);
+                        //for(iCnt=iPaintBeg; iCnt<gpStrVec->iVectorSize; ++iCnt)
+                        for(iCnt=iPaintBeg; iCnt<iPaintEnd; ++iCnt)
+                        {
                                 pchBuffer = itoa(iCnt+1, chLineNumberBuffer, 10);
-				TextOutA(
+                                TextOutA(
                                         hdc,
                                         xStart,
                                         ((iCnt - iVerPos) * cyChar),
                                         pchBuffer, strlen(pchBuffer)
                                 );
-                		TextOutA(
+                                TextOutA(
                                         hdc,
-					(xOffSet * cxCaps),
-					cyChar * (iCnt - iVerPos),
-					gpStrVec->ppStringVector[iCnt],
-					strlen(gpStrVec->ppStringVector[iCnt])
-				);
-			}
+                                        (xOffSet * cxCaps),
+                                        cyChar * (iCnt - iVerPos),
+                                        gpStrVec->ppStringVector[iCnt],
+                                        strlen(gpStrVec->ppStringVector[iCnt])
+                                );
+                        }
                         EndPaint(hWnd, &ps);
                         hdc = NULL;
                         break;
@@ -293,7 +294,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 PSTRINGVECTOR ReadFileInMemory(LPSTR lpFileName)
 {
-        #define BUFFER_SIZE 128
+        #define BUFFER_SIZE 4096
         FILE* fp = NULL;
         CHAR chBuffer[BUFFER_SIZE];
         PCHAR pStr = NULL;
